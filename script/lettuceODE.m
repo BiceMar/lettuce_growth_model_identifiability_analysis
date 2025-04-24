@@ -47,7 +47,7 @@ U_T   = inputs.U_T;   % Canopy temperature (degrees C)
 % Intermediate calculations
 
 
-% Light use efficiency (epsilon)
+% epsilon
 Gamma = c_Gamma * c_10_Gamma^((U_T - 20) / 10);
 if U_CO2 + 2*Gamma <= 0 % prevents division by zero
     epsilon = 0;
@@ -63,7 +63,7 @@ c_car = max(eps, c_car);
 g_CO2_inv = (1 / max(eps, c_bnd)) + (1 / max(eps, c_stm)) + (1 / max(eps, c_car));
 g_CO2 = 1 / g_CO2_inv; 
 
-% Max Canopy Photosynthesis (f_phot_max)
+% f_phot_max
 phot_denom = epsilon * U_PAR + g_CO2 * c_w * (U_CO2 - Gamma);
 if phot_denom <= 0
     f_phot_max = 0;
@@ -72,10 +72,10 @@ else
     f_phot_max = max(0, f_phot_max); % cannot be negative
 end
 
-% Gross Canopy Photosynthesis Rate (f_phot)
+% f_phot
 f_phot = (1 - exp(-c_K * c_lar * (1 - c_tau) * X_sdw)) * f_phot_max;
 
-% Growth Rate (r_gr)
+% r_gr
 growth_denom = c_gamma * X_sdw + X_nsdw;
 if growth_denom <= 0 || X_nsdw < 0
     r_gr = 0;
@@ -84,7 +84,7 @@ else
     r_gr = max(0, r_gr); % cannot be negative
 end
 
-% Maintenance Respiration (f_resp)
+% f_resp
 f_resp = (c_resp_sht * (1 - c_tau) * X_sdw + c_resp_rt * c_tau * X_sdw) * c_Q10_resp^((U_T - 25) / 10); 
 f_resp = max(0, f_resp); % cannot be negative
 
